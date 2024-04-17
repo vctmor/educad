@@ -5,6 +5,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import model.DAO;
+
 import java.awt.Toolkit;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -14,11 +17,22 @@ import javax.swing.ImageIcon;
 import javax.swing.border.BevelBorder;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 
 public class Educad extends JFrame {
+
+	DAO dao = new DAO();
+	private Connection con;
+	private PreparedStatement pst;
+	private ResultSet rs;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -56,7 +70,20 @@ public class Educad extends JFrame {
 	 * Create the frame.
 	 */
 	public Educad() {
-		
+
+
+		addWindowListener((WindowListener) new WindowAdapter() {
+			@Override
+			public void windowActivated(WindowEvent e) {
+
+				status();
+				//setarData();
+				
+				setLocationRelativeTo(null);
+			}
+		});
+
+
 		setTitle("Educad");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Educad.class.getResource("/img/camera.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,6 +102,7 @@ public class Educad extends JFrame {
 		
 		labelStatus = new JLabel("");
 		labelStatus.setIcon(new ImageIcon(Educad.class.getResource("/img/dboff.png")));
+		
 		labelStatus.setBounds(359, 12, 32, 32);
 		panel.add(labelStatus);
 		
@@ -168,5 +196,30 @@ public class Educad extends JFrame {
 		
 		JList listNames = new JList();
 		scrollPaneList.setViewportView(listNames);
+
+	}// FIM Construtor
+
+	private void status(){
+
+		try {
+			
+			con = dao.conectar();
+
+			if (con == null) {
+
+				 System.out.println("Erro");
+				labelStatus.setIcon(new ImageIcon(Educad.class.getResource("/img/dboff.png")));
+			} else {
+
+				System.out.println("Conectou");
+				labelStatus.setIcon(new ImageIcon(Educad.class.getResource("/img/dbon.png")));
+
+			}
+			con.close();
+
+		} catch (Exception e) {
+			
+			System.out.println(e);
+		}
 	}
 }
