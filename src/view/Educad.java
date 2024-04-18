@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,8 +22,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Date;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
@@ -55,11 +62,14 @@ public class Educad extends JFrame {
 	public static void main(String[] args) {
 
 		EventQueue.invokeLater(new Runnable() {
+
 			public void run() {
 				try {
 					Educad frame = new Educad();
 					frame.setVisible(true);
+
 				} catch (Exception e) {
+					
 					e.printStackTrace();
 				}
 			}
@@ -77,7 +87,7 @@ public class Educad extends JFrame {
 			public void windowActivated(WindowEvent e) {
 
 				status();
-				//setarData();
+				setarData();
 				
 				setLocationRelativeTo(null);
 			}
@@ -107,6 +117,8 @@ public class Educad extends JFrame {
 		panel.add(labelStatus);
 		
 		labelDate = new JLabel("");
+		labelDate.setForeground(SystemColor.text);
+		labelDate.setFont(new Font("Dialog", Font.BOLD, 14));
 		labelDate.setBounds(12, 23, 316, 21);
 		panel.add(labelDate);
 		
@@ -222,4 +234,31 @@ public class Educad extends JFrame {
 			System.out.println(e);
 		}
 	}
+
+	private void setarData(){
+
+		// Obter a data atual
+    java.util.Date dataUtil = new java.util.Date();
+    
+    // Convertendo java.util.Date para java.sql.Date
+    java.sql.Date dataSql = new java.sql.Date(dataUtil.getTime());
+		DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL);
+		labelDate.setText((formatter.format(dataSql)));
+	}
+
+/*
+
+ok status()
+ok setarData()
+insertDB()
+buscarRA()
+listarNomes()
+buscarNome()
+editar()
+excluir()
+carregarFoto()
+reset()
+gerarPdf()
+
+	 */
 }
