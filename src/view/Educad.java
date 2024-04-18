@@ -2,10 +2,12 @@ package view;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.DAO;
 
@@ -13,7 +15,11 @@ import java.awt.Toolkit;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.Rectangle;
+
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.border.BevelBorder;
 import java.awt.SystemColor;
@@ -21,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -40,6 +47,15 @@ public class Educad extends JFrame {
 	private Connection con;
 	private PreparedStatement pst;
 	private ResultSet rs;
+
+	// Declara, mas não instancia, objeto para o fluxo de byetes
+	private FileInputStream fis;
+
+	// variável global para armazenar o tamanho da imagem (bytes)
+	private int size;
+
+	// variavel usada na correção do BUG
+	private boolean photoLoaded = false;
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -88,6 +104,7 @@ public class Educad extends JFrame {
 
 				status();
 				setarData();
+				loadFoto();
 				
 				setLocationRelativeTo(null);
 			}
@@ -189,6 +206,8 @@ public class Educad extends JFrame {
 		btnLoadPhoto.setEnabled(false);
 		btnLoadPhoto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+
+				loadFoto();
 			}
 		});
 		btnLoadPhoto.setBounds(12, 115, 117, 25);
@@ -244,6 +263,33 @@ public class Educad extends JFrame {
     java.sql.Date dataSql = new java.sql.Date(dataUtil.getTime());
 		DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL);
 		labelDate.setText((formatter.format(dataSql)));
+	}
+
+	private void loadFoto(){
+
+		JFileChooser jfc = new JFileChooser();
+		jfc.setDialogTitle("Selecionar o arquivo");
+		jfc.setFileFilter(new FileNameExtensionFilter("Arquivos de imagem (*.PNG, *JPG, *JPEG)", "png", "jpg", "jpeg"));
+		int result = jfc.showOpenDialog(this);
+
+		if (result == JFileChooser.APPROVE_OPTION){
+
+			try {
+
+				fis = new FileInputStream(jfc.getSelectedFile());
+				size = (int) jfc.getSelectedFile().length();
+				Image photo = ImageIO.read(jfc.getSelectedFile()).getScaledInstance(label.getWidth(), 
+							label.getHeight(), Image.SCALE_SMOOTH);
+				label.setIcon(new ImageIcon(photo));
+				label.updateUI();
+
+				photoLoaded = true;
+
+			} catch (Exception e) {
+				
+				System.out.println(e);
+			}
+		}
 	}
 
 /*
