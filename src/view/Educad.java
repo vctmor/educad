@@ -104,7 +104,7 @@ public class Educad extends JFrame {
 
 				status();
 				setarData();
-				loadFoto();
+				//loadFoto();
 				
 				setLocationRelativeTo(null);
 			}
@@ -296,13 +296,14 @@ public class Educad extends JFrame {
 
 ok status()
 ok setarData()
+ok carregarFoto()
 insertDB()
 buscarRA()
 listarNomes()
 buscarNome()
 editar()
 excluir()
-carregarFoto()
+
 reset()
 gerarPdf()
 
