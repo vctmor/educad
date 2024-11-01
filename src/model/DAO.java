@@ -10,8 +10,8 @@ public class DAO {
     private String driver = "com.mysql.cj.jdbc.Driver";
     private String  url = "jdbc:mysql://192.168.15.22:3306/dbEducad";
     
-    private String user = "root";
-	private String password = "a1234567";
+    private String user = "";
+	private String password = "";
 
     public Connection conectar(){
 
